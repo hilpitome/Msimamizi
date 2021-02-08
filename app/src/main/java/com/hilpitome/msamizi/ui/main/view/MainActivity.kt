@@ -15,10 +15,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.hilpitome.msamizi.R
 import com.hilpitome.msamizi.data.local.Inventory
+import com.hilpitome.msamizi.ui.RowClicklistener
 import com.hilpitome.msamizi.ui.main.adapter.InventoryListAdapter
 import com.hilpitome.msamizi.ui.main.viewmodel.MainViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RowClicklistener{
     lateinit var mainViewModel:MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         var inventoryList = listOf<Inventory>()
 
         //creating our adapter
-        val adapter = InventoryListAdapter()
+        val adapter = InventoryListAdapter(this)
         //now adding the adapter to recyclerview
         recyclerView.adapter = adapter
         // Create the observer which updates the UI.
@@ -105,5 +106,10 @@ class MainActivity : AppCompatActivity() {
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         mainViewModel.inventoryList.observe(this, inventoryListObserver)
 
+    }
+
+    override fun onRowClickListener(model: Any?) {
+        val inventory = model as Inventory
+        Log.e("inv", inventory.name)
     }
 }
