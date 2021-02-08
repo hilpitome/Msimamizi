@@ -1,5 +1,6 @@
 package com.hilpitome.msamizi.ui.main.view
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +9,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.hilpitome.msamizi.R
-import com.hilpitome.msamizi.data.UnitOfMeasure
 import com.hilpitome.msamizi.data.local.Inventory
+import com.hilpitome.msamizi.ui.main.adapter.InventoryListAdapter
 import com.hilpitome.msamizi.ui.main.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +25,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
+        setUpAddInventoryFab()
+        setUpRecyclerview()
+
+    }
+
+    fun setUpAddInventoryFab(){
         val mShowDialog = findViewById(R.id.add_invent) as FloatingActionButton
         mShowDialog.setOnClickListener {
             val mBuilder: AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
@@ -34,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             spinner.adapter = adapter
             var selected = 0
             spinner.onItemSelectedListener = object :
-                    AdapterView.OnItemSelectedListener {
+                AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
                     selected = position
@@ -60,27 +69,37 @@ class MainActivity : AppCompatActivity() {
                     dialog.dismiss()
                 } else {
                     Toast.makeText(
-                            this@MainActivity,
-                            "Please fill all fields",
-                            Toast.LENGTH_SHORT
+                        this@MainActivity,
+                        "Please fill all fields",
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
         }
 
-        populateInventoryList()
-
     }
 
-    fun populateInventoryList()
+    fun setUpRecyclerview()
     {
 
+        //getting recyclerview from xml
+        val recyclerView = findViewById(R.id.invent_rv) as RecyclerView
+
+        //adding a layoutmanager
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        var inventoryList = listOf<Inventory>()
+
+        //creating our adapter
+        val adapter = InventoryListAdapter()
+        //now adding the adapter to recyclerview
+        recyclerView.adapter = adapter
         // Create the observer which updates the UI.
         val inventoryListObserver = Observer<List<Inventory>> { invList ->
             // Update the UI
-            invList.forEach{
-                it -> Log.e("item name", it.name)
-            }
+            Log.e("here", invList.size.toString())
+            adapter.setList(invList)
+            adapter.notifyDataSetChanged()
         }
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.

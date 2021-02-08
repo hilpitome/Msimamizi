@@ -7,7 +7,7 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.hilpitome.msamizi.MsimamiziApplication
 
 class InventoryRepository (application: Application){
-    lateinit var database:MsimamiziDatabase
+    var database:MsimamiziDatabase
     val msimamiziApplication = application as MsimamiziApplication
     init {
         database = msimamiziApplication.msimamiziDb
