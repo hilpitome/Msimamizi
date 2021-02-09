@@ -14,6 +14,11 @@ class MainViewModel(application: Application?) : AndroidViewModel(
 ) {
     val inventoryList: LiveData<List<Inventory>>
     private val inventoryRepository: InventoryRepository
+
+    init {
+        inventoryRepository = InventoryRepository(application!!)
+        inventoryList = inventoryRepository.fetchInventoryList()
+    }
     fun insertInventory(name: String?, unitOfMeasure: String?) {
         val inventory = Inventory(null, name!!, unitOfMeasure!!)
         viewModelScope.launch(Dispatchers.IO) {
@@ -21,8 +26,5 @@ class MainViewModel(application: Application?) : AndroidViewModel(
         }
     }
 
-    init {
-        inventoryRepository = InventoryRepository(application!!)
-        inventoryList = inventoryRepository.fetchInventoryList()
-    }
+
 }

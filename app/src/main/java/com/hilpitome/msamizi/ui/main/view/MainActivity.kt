@@ -1,6 +1,6 @@
 package com.hilpitome.msamizi.ui.main.view
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +18,8 @@ import com.hilpitome.msamizi.data.local.Inventory
 import com.hilpitome.msamizi.ui.RowClicklistener
 import com.hilpitome.msamizi.ui.main.adapter.InventoryListAdapter
 import com.hilpitome.msamizi.ui.main.viewmodel.MainViewModel
+import com.hilpitome.msamizi.ui.stock.view.StockActivity
+import com.hilpitome.msamizi.util.Constants
 
 class MainActivity : AppCompatActivity(), RowClicklistener{
     lateinit var mainViewModel:MainViewModel
@@ -89,8 +91,6 @@ class MainActivity : AppCompatActivity(), RowClicklistener{
         //adding a layoutmanager
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        var inventoryList = listOf<Inventory>()
-
         //creating our adapter
         val adapter = InventoryListAdapter(this)
         //now adding the adapter to recyclerview
@@ -110,6 +110,9 @@ class MainActivity : AppCompatActivity(), RowClicklistener{
 
     override fun onRowClickListener(model: Any?) {
         val inventory = model as Inventory
-        Log.e("inv", inventory.name)
+        val intent = Intent(this, StockActivity::class.java).apply {
+            putExtra(Constants.INVENTORY_ITEM_ID, inventory.id)
+        }
+        startActivity(intent)
     }
 }

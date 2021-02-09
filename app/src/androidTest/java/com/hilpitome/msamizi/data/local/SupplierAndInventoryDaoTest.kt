@@ -78,4 +78,13 @@ class SupplierAndInventoryDaoTest {
         val allInventory = inventoryDao.observeAllInventoryItems().getOrAwaitValueTest()
         assertThat(allInventory).doesNotContain(inventory)
     }
+
+    @Test
+    fun fetchInventoryItemById() = runBlockingTest {
+        val inventory = Inventory(2, "Rice",  "Kg")
+        inventoryDao.insertInventoryItem(inventory)
+        val inv = inventoryDao.fetchInventoryById(2)
+       // val allInventory = inventoryDao.observeAllInventoryItems().getOrAwaitValueTest()
+        assertThat(inv).isEqualTo(inv)
+    }
 }

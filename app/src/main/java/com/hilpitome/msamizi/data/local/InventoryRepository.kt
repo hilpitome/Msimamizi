@@ -19,4 +19,7 @@ class InventoryRepository (application: Application){
     suspend fun insertInventory(inventory: Inventory){
         database.inventoryDao().insertInventoryItem(inventory)
     }
+    fun fetchInventoryById(id:Int):LiveData<Inventory>{
+       return database.inventoryDao().fetchInventoryById(id)
+    }
 }

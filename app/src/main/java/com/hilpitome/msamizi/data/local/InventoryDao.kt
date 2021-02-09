@@ -14,5 +14,8 @@ interface InventoryDao {
     @Query("SELECT * FROM inventory_items")
     fun observeAllInventoryItems():LiveData<List<Inventory>>
 
+    @Query("SELECT * FROM inventory_items where id=:id")
+    fun fetchInventoryById(id:Int):LiveData<Inventory>
+
 
 }
