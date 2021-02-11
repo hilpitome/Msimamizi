@@ -8,7 +8,7 @@
 - Add more tests
 
 ## Tech
--[Kotlin] (https://kotlinlang.org/)
+- [Kotlin] (https://kotlinlang.org/)
 - MVVM architecture for easier testing and lifecycle management
 - Room as the SQLITE orm
 
