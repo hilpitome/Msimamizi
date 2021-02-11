@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.hilpitome.msamizi.R
-import com.hilpitome.msamizi.data.local.Inventory
 import com.hilpitome.msamizi.data.local.Stock
 import com.hilpitome.msamizi.ui.RowClicklistener
 import com.hilpitome.msamizi.ui.stock.adapter.StockListAdapter
@@ -21,7 +20,8 @@ import com.hilpitome.msamizi.util.Constants
 import java.util.*
 
 class StockActivity : AppCompatActivity(), RowClicklistener {
-    var inv_id = 0;
+    var invId = 0;
+    val stockQueue:Queue<Stock> = LinkedList<Stock>() // used to remove items from stock on a FIFO basis
     lateinit var stockViewModel: StockViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
         stockViewModel = ViewModelProvider(this).get(StockViewModel::class.java)
 
         if(intent!=null){
-            inv_id = intent.getIntExtra(Constants.INVENTORY_ITEM_ID, 0)
+            invId = intent.getIntExtra(Constants.INVENTORY_ITEM_ID, 0)
             if(actionBar!=null){
                 actionBar!!.title = "Product list"
             }
@@ -38,12 +38,61 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
 
         }
 
-        setUpAddInventoryFab()
+        setUpAddStockFab()
         setUpRecyclerview()
+        setUpIssueStock()
 
     }
 
-    fun setUpAddInventoryFab(){
+    private fun setUpIssueStock() {
+
+        val mShowDialog = findViewById(R.id.remove_stock_fab) as FloatingActionButton
+        mShowDialog.setOnClickListener {
+            val mBuilder: AlertDialog.Builder = AlertDialog.Builder(this@StockActivity)
+            val mView: View = getLayoutInflater().inflate(R.layout.dialogue_issue_stock, null)
+            val quantityEt: TextInputEditText = mView.findViewById<View>(R.id.qty_issued_et) as TextInputEditText
+            val mIssueStockBtn = mView.findViewById<View>(R.id.issue_stock_btn) as Button
+
+            mBuilder.setView(mView)
+            val dialog: AlertDialog = mBuilder.create()
+            dialog.show()
+            mIssueStockBtn.setOnClickListener {
+                if (!quantityEt.getText().toString().isEmpty()) {
+
+                    var requestedQty:Int = quantityEt.text.toString().toInt()
+                    var currStock: Stock? = stockQueue.poll()
+                    val now: Date = Date(System.currentTimeMillis())
+                    while(requestedQty>0 && currStock!=null){
+                        if(requestedQty>currStock.qty){
+                            requestedQty = requestedQty - currStock.qty
+                            currStock.qty = 0
+                            currStock.dateUpdated = now
+                            stockViewModel.insertStock(currStock) // return updated stock to db
+                        }
+
+                        if(requestedQty<=currStock.qty){
+                            currStock.qty = currStock.qty - requestedQty;
+                            requestedQty = 0;
+                            currStock.dateUpdated = now
+                            stockViewModel.insertStock(currStock)
+                        }
+                        currStock = stockQueue.poll()
+//                        // fetch new list
+//                        stockViewModel.fetchStockByInventoryId(invId).observe(this, stockListObserver)
+                    }
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(
+                        this@StockActivity,
+                        "Please fill all fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    fun setUpAddStockFab(){
         val mShowDialog = findViewById(R.id.add_stock_fab) as FloatingActionButton
         mShowDialog.setOnClickListener {
             val mBuilder: AlertDialog.Builder = AlertDialog.Builder(this@StockActivity)
@@ -60,7 +109,7 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
 
                 ) {
                     val now: Date = Date(System.currentTimeMillis())
-                    stockViewModel.insertStock(Stock(null, inv_id,
+                    stockViewModel.insertStock(Stock(null, invId,
                         quantityEt.text.toString().toInt(), costPerUnitEt.text.toString().toFloat(),
                         now, now
                     ))
@@ -98,11 +147,15 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
 
             adapter.setList(stockList)
             adapter.notifyDataSetChanged()
+            stockQueue.clear();
+            stockList.forEach{item -> stockQueue.add(item)}
         }
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
 
-        stockViewModel.fetchStockByInventoryId(inv_id).observe(this, stockListObserver)
+        stockViewModel.fetchStockByInventoryId(invId).observe(this, stockListObserver)
     }
+
+
 
     override fun onRowClickListener(model: Any?) {
         val stock = model as Stock

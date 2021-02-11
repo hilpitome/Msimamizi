@@ -23,11 +23,21 @@
     <include layout="@layout/content_product" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/remove_stock_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_input_delete"
+        android:contentDescription="@string/removes_stock_items" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_stock_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:contentDescription="@string/adds_stock_items"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

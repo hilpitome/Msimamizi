@@ -12,5 +12,5 @@ data class Stock(
     var qty:Int,
     val cost:Float,
     val dateCreated: Date,
-    val dateUpdated: Date
+    var dateUpdated: Date
 )
