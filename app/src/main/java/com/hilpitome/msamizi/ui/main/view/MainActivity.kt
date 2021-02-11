@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), RowClicklistener{
         // Create the observer which updates the UI.
         val inventoryListObserver = Observer<List<Inventory>> { invList ->
             // Update the UI
-            Log.e("here", invList.size.toString())
+
             adapter.setList(invList)
             adapter.notifyDataSetChanged()
         }

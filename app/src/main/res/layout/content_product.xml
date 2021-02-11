@@ -8,10 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/product_description"/>
+        android:id="@+id/stock_description"/>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/product_description"
-        android:id="@+id/product_list_rv"/>
+        app:layout_constraintTop_toBottomOf="@id/stock_description"
+        android:id="@+id/stock_list_rv"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
