@@ -7,14 +7,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hilpitome.msamizi.R
 import com.hilpitome.msamizi.data.local.Inventory
+import com.hilpitome.msamizi.data.local.Stock
 import com.hilpitome.msamizi.ui.RowClicklistener
 
 class StockListAdapter(rcl:RowClicklistener): RecyclerView.Adapter<StockListAdapter.ViewHolder>(){
     val rowClicklistener = rcl
-    var inventoryList = listOf<Inventory>()
+    var stockList = listOf<Stock>()
 
-    fun setList(invList:List<Inventory>){
-        inventoryList = invList
+    fun setList(stkList:List<Stock>){
+        stockList = stkList
     }
 
     override fun onCreateViewHolder(
@@ -22,25 +23,27 @@ class StockListAdapter(rcl:RowClicklistener): RecyclerView.Adapter<StockListAdap
         viewType: Int
     ): StockListAdapter.ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.inventory_list_item, parent, false)
+            .inflate(R.layout.stock_list_item, parent, false)
         return ViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: StockListAdapter.ViewHolder, position: Int) {
-        val inventory = inventoryList[position]
-        holder.bind(inventory)
-        holder.itemView.setOnClickListener{rowClicklistener.onRowClickListener(inventory)}
+        val stock = stockList[position]
+        holder.bind(stock)
+        holder.itemView.setOnClickListener{rowClicklistener.onRowClickListener(stock)}
     }
 
     override fun getItemCount(): Int {
-        return inventoryList.size
+        return stockList.size
     }
 
     class ViewHolder(v: View): RecyclerView.ViewHolder(v){
-        var inventoryNameTv: TextView = v.findViewById(R.id.inventory_item_tv)
+        var quantityTv: TextView = v.findViewById(R.id.qty_tv)
+        var costTv: TextView = v.findViewById(R.id.cost_tv)
 
-        fun bind(inventory: Inventory){
-            inventoryNameTv.text = inventory.name
+        fun bind(stock: Stock){
+            quantityTv.text = stock.qty.toString()
+            costTv.text = stock.cost.toString()
         }
 
 

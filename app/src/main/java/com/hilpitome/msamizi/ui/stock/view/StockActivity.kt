@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.hilpitome.msamizi.R
+import com.hilpitome.msamizi.data.local.Inventory
 import com.hilpitome.msamizi.data.local.Stock
 import com.hilpitome.msamizi.ui.RowClicklistener
 import com.hilpitome.msamizi.ui.stock.adapter.StockListAdapter
@@ -37,7 +38,7 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
 
         }
 
-
+        setUpAddInventoryFab()
         setUpRecyclerview()
 
     }
@@ -46,13 +47,10 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
         val mShowDialog = findViewById(R.id.add_stock_fab) as FloatingActionButton
         mShowDialog.setOnClickListener {
             val mBuilder: AlertDialog.Builder = AlertDialog.Builder(this@StockActivity)
-            val mView: View = getLayoutInflater().inflate(R.layout.dialogue_add_stock_batch, null)
-            val quantityEt: TextInputEditText = mView.findViewById<View>(R.id.quantity_tiet) as TextInputEditText
-            val costPerUnitEt: TextInputEditText = mView.findViewById<View>(R.id.cost_tiet) as TextInputEditText
-            val mAddStockBtn = mView.findViewById<View>(R.id.add_stock_fab) as Button
-
-
-
+            val mView: View = getLayoutInflater().inflate(R.layout.dialogue_add_stock, null)
+            val quantityEt: TextInputEditText = mView.findViewById<View>(R.id.quantity_et) as TextInputEditText
+            val costPerUnitEt: TextInputEditText = mView.findViewById<View>(R.id.price_perunit_et) as TextInputEditText
+            val mAddStockBtn = mView.findViewById<View>(R.id.insert_stock_btn) as Button
 
             mBuilder.setView(mView)
             val dialog: AlertDialog = mBuilder.create()
@@ -98,18 +96,16 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
         val stockListObserver = Observer<List<Stock>> {  stockList ->
             // Update the UI
 
-//            adapter.setList(invList)
-//            adapter.notifyDataSetChanged()
+            adapter.setList(stockList)
+            adapter.notifyDataSetChanged()
         }
-        stockViewModel.fetchStockByInventoryId(inv_id).observe(this, stockListObserver)
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-//        productViewModel.inventory!!.observe(this, prodListObserver)
 
-
-
+        stockViewModel.fetchStockByInventoryId(inv_id).observe(this, stockListObserver)
     }
 
     override fun onRowClickListener(model: Any?) {
-
+        val stock = model as Stock
+        System.out.println("stock "+stock.toString())
     }
 }
