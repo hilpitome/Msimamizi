@@ -23,11 +23,13 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
     var invId = 0;
     val stockQueue:Queue<Stock> = LinkedList<Stock>() // used to remove items from stock on a FIFO basis
     lateinit var stockViewModel: StockViewModel
+    lateinit var  emptyStateView:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stock)
         setSupportActionBar(findViewById(R.id.toolbar))
         stockViewModel = ViewModelProvider(this).get(StockViewModel::class.java)
+        emptyStateView = findViewById<View>(R.id.empty_view) as TextView
 
         if(intent!=null){
             invId = intent.getIntExtra(Constants.INVENTORY_ITEM_ID, 0)
@@ -77,8 +79,6 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
                             stockViewModel.insertStock(currStock)
                         }
                         currStock = stockQueue.poll()
-//                        // fetch new list
-//                        stockViewModel.fetchStockByInventoryId(invId).observe(this, stockListObserver)
                     }
                     dialog.dismiss()
                 } else {
@@ -149,6 +149,10 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
             adapter.notifyDataSetChanged()
             stockQueue.clear();
             stockList.forEach{item -> stockQueue.add(item)}
+
+            if (stockList.size>0){
+                emptyStateView.visibility = View.GONE
+            } else  emptyStateView.visibility = View.VISIBLE
         }
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
 
@@ -159,6 +163,6 @@ class StockActivity : AppCompatActivity(), RowClicklistener {
 
     override fun onRowClickListener(model: Any?) {
         val stock = model as Stock
-        System.out.println("stock "+stock.toString())
+        System.out.println(stock.toString())
     }
 }

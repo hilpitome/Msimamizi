@@ -14,4 +14,5 @@
     <string name="optional_supplier_name">(optional) supplier name</string>
     <string name="adds_stock_items">adds stock items</string>
     <string name="removes_stock_items">removes stock items</string>
+    <string name="no_data_available">Start adding new items</string>
 </resources>

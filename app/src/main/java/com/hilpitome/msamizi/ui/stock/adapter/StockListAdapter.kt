@@ -38,12 +38,14 @@ class StockListAdapter(rcl:RowClicklistener): RecyclerView.Adapter<StockListAdap
     }
 
     class ViewHolder(v: View): RecyclerView.ViewHolder(v){
+        var batchNumTv: TextView = v.findViewById(R.id.batch_number_tv)
         var quantityTv: TextView = v.findViewById(R.id.qty_tv)
         var costTv: TextView = v.findViewById(R.id.cost_tv)
 
         fun bind(stock: Stock){
-            quantityTv.text = stock.qty.toString()
-            costTv.text = stock.cost.toString()
+            batchNumTv.text = "Batch # ${stock.id.toString()}"
+            quantityTv.text = "Number in stock ${stock.qty.toString()}"
+            costTv.text = "Cost per unit ${stock.cost.toString()}"
         }
 
 

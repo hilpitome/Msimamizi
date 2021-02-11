@@ -13,7 +13,7 @@
         <activity
             android:name=".ui.stock.view.StockActivity"
             android:label="@string/title_activity_product"
-            android:theme="@style/Theme.Msamizi.NoActionBar"></activity>
+            android:theme="@style/Theme.Msamizi.NoActionBar"/>
         <activity android:name=".ui.main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

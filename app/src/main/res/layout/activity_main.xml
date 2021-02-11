@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.view.MainActivity">
+    tools:context=".ui.main.view.MainActivity"
+    >
 
     <SearchView
         android:id="@+id/search_view"
@@ -14,17 +15,63 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="12dp"/>
+        app:layout_constraintBottom_toTopOf="@+id/stat_card"
+        android:queryHint="search for product"
+        android:layout_margin="8dp"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stat_card"
+        app:layout_constraintTop_toBottomOf="@+id/search_view"
+        android:layout_margin="8dp"
+        android:focusable="true"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/inventory_stat_tv"
+                android:text="Number of inventory items 20"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/design_default_color_primary_variant"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock value N/A"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/design_default_color_primary_variant"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Number of suppliers N/A"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/design_default_color_primary_variant"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/invent_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view" />
+        app:layout_constraintTop_toBottomOf="@+id/stat_card"
+        android:layout_margin="16dp"/>
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_data_available"
+        android:textColor="@color/design_default_color_primary_variant"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_invent"
@@ -36,4 +83,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_add" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

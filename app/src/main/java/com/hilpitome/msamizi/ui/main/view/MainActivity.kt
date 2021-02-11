@@ -1,14 +1,14 @@
 package com.hilpitome.msamizi.ui.main.view
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,10 +23,14 @@ import com.hilpitome.msamizi.util.Constants
 
 class MainActivity : AppCompatActivity(), RowClicklistener{
     lateinit var mainViewModel:MainViewModel
+    lateinit var inventoryStartTv:TextView
+    lateinit var  emptyStateView:TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        inventoryStartTv = findViewById<View>(R.id.inventory_stat_tv) as TextView
+        emptyStateView = findViewById<View>(R.id.empty_view) as TextView
 
         setUpAddInventoryFab()
         setUpRecyclerview()
@@ -47,8 +51,10 @@ class MainActivity : AppCompatActivity(), RowClicklistener{
             var selected = 0
             spinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>,
-                                            view: View, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View, position: Int, id: Long
+                ) {
                     selected = position
                 }
 
@@ -95,12 +101,19 @@ class MainActivity : AppCompatActivity(), RowClicklistener{
         val adapter = InventoryListAdapter(this)
         //now adding the adapter to recyclerview
         recyclerView.adapter = adapter
+        recyclerView.itemAnimator = DefaultItemAnimator()
         // Create the observer which updates the UI.
         val inventoryListObserver = Observer<List<Inventory>> { invList ->
             // Update the UI
 
             adapter.setList(invList)
             adapter.notifyDataSetChanged()
+
+            inventoryStartTv.text = "Number of inventory items ${invList.size}"
+            if (invList.size>0){
+                emptyStateView.visibility = View.GONE
+            } else  emptyStateView.visibility = View.VISIBLE
+
         }
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
