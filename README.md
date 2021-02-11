@@ -7,9 +7,4 @@
 > Add proper inventory tracking and reporting
 
 # Tech
-[Kotlin]
-
-
-
-
-[Kotlin] : <https://kotlinlang.org/>
+[Kotlin] (https://kotlinlang.org/)
